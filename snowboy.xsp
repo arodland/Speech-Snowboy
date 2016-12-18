@@ -1,0 +1,31 @@
+#include "snowboy-detect.h"
+
+%module{Speech::Snowboy::Raw};
+%loadplugin{feature::default_xs_typemap};
+%typemap{std::string};
+
+%name{Speech::Snowboy::Raw} class snowboy::SnowboyDetect {
+  %name{new} SnowboyDetect(std::string& resource_filename, std::string& model_str);
+
+  bool Reset();
+
+  %name{RunDetectionWave} int RunDetection(std::string& data);
+//  %name{RunDetectionFloat} int RunDetection(float* data, int array_length);
+
+  void SetSensitivity(std::string& sensitivity_str);
+  std::string GetSensitivity() const;
+
+  void SetAudioGain(float audio_gain);
+
+  void UpdateModel() const;
+
+  int NumHotwords() const;
+
+  void ApplyFrontend(bool apply_frontend);
+
+  int SampleRate() const;
+  int NumChannels() const;
+  int BitsPerSample() const;
+
+  ~SnowboyDetect();
+};
