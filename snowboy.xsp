@@ -3,6 +3,7 @@
 %module{Speech::Snowboy::Raw};
 %loadplugin{feature::default_xs_typemap};
 %typemap{std::string};
+%typemap{AV*};
 
 %name{Speech::Snowboy::Raw} class snowboy::SnowboyDetect {
   %name{new} SnowboyDetect(std::string& resource_filename, std::string& model_str);
@@ -10,7 +11,48 @@
   bool Reset();
 
   %name{RunDetectionWave} int RunDetection(std::string& data);
-//  %name{RunDetectionFloat} int RunDetection(float* data, int array_length);
+
+  %name{RunDetectionFloat} int RunDetection(AV *av)
+    %code{%
+      int len = av_len(av), i;
+      float *data;
+      Newx(data, len, float);
+      for (i = 0 ; i < len ; i++) {
+        SV **svp = av_fetch(av, i, 0);
+        NV nv = SvNV(svp ? *svp : &PL_sv_undef);
+        data[i] = (float)nv;
+      }
+      RETVAL = THIS->RunDetection(data, len);
+      Safefree(data);
+    %};
+
+  %name{RunDetectionInt16} int RunDetection(AV *av)
+    %code{%
+      int len = av_len(av), i;
+      int16_t *data;
+      Newx(data, len, int16_t);
+      for (i = 0 ; i < len ; i++) {
+        SV **svp = av_fetch(av, i, 0);
+        IV iv = SvIV(svp ? *svp : &PL_sv_undef);
+        data[i] = (int16_t)iv;
+      }
+      RETVAL = THIS->RunDetection(data, len);
+      Safefree(data);
+    %};
+
+  %name{RunDetectionInt32} int RunDetection(AV *av)
+    %code{%
+      int len = av_len(av), i;
+      int32_t *data;
+      Newx(data, len, int32_t);
+      for (i = 0 ; i < len ; i++) {
+        SV **svp = av_fetch(av, i, 0);
+        IV iv = SvIV(svp ? *svp : &PL_sv_undef);
+        data[i] = (int32_t)iv;
+      }
+      RETVAL = THIS->RunDetection(data, len);
+      Safefree(data);
+    %};
 
   void SetSensitivity(std::string& sensitivity_str);
   std::string GetSensitivity() const;
