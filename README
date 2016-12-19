@@ -1,0 +1,7 @@
+* Install portaudio devel headers and https://github.com/arodland/IO-Async-PortAudio
+* Install ATLAS static libraries (libatlas-base-dev on Debian)
+* git submodule update --recursive
+* perl Build.PL
+* ./Build
+* perl -Iblib/lib -Iblib/arch eg/hello-snowboy.pl
+* Say "snowboy" into the mic.
