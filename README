@@ -1,5 +1,6 @@
 * Install portaudio devel headers and https://github.com/arodland/IO-Async-PortAudio
 * Install ATLAS static libraries (libatlas-base-dev on Debian)
+* git submodule init
 * git submodule update --recursive
 * perl Build.PL
 * ./Build
